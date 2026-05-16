@@ -728,7 +728,17 @@
           </div>
 
           <div class="history-right">
-            - ¥${item.amount.toLocaleString()}
+         
+            ${
+              showKRW
+
+              ? `- ₩${Math.round(
+                  item.amount * yenToKrwRate
+                ).toLocaleString()}`
+
+              : `- ¥${item.amount.toLocaleString()}`
+            }
+
           </div>
         `;
 
