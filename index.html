@@ -1188,8 +1188,13 @@ function restoreExpense(item) {
 
       : `¥${item.amount.toLocaleString()}`;
 
+  const memoText =
+    item.memo
+      ? `\n[ ${item.memo} ]`
+      : "";
+
   const ok = confirm(
-    `${item.time}\n${currencyText}\n\n이 내역을 복구할까요?`
+    `${item.time}\n${currencyText}${memoText}\n\n이 내역을 복구할까요?`
   );
 
   if (!ok) return;
