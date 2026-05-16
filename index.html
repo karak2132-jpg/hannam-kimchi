@@ -1002,19 +1002,15 @@
             ? "history-item undone"
             : "history-item";
 
-        if (item.undone) {
+        div.onclick = () => {
 
-          div.onclick = () => {
-          
-            if (item.undone) {
-              restoreExpense(item);
-              return;
-            }
+          if (item.undone) {
+            restoreExpense(item);
+            return;
+          }
 
-            openMemoModal(item);
-          };
-
-        }
+          openMemoModal(item);
+        };
 
         div.innerHTML = `
           <div class="history-left">
