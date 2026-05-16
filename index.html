@@ -51,7 +51,6 @@
     .budget-box {
       width: 100%;
       display: flex;
-      gap: 10px;
     }
 
     .history-item.undone {
@@ -726,15 +725,12 @@
 
       <input
         type="number"
+        inputmode="numeric"
+        pattern="[0-9]*"
         id="budgetInput"
         placeholder="오늘 예산 입력"
+        onkeydown="handleBudgetEnter(event)"
       />
-
-      <button
-        class="set-btn"
-        onclick="setBudget()">
-        설정
-      </button>
 
     </div>
 
@@ -765,6 +761,8 @@
 
       <input
         type="number"
+        inputmode="numeric"
+        pattern="[0-9]*"
         id="expenseInput"
         placeholder="사용 금액 입력"
       />
@@ -951,6 +949,12 @@
       input.value = "";
 
       updateUI();
+    }
+
+    function handleBudgetEnter(event) {
+      if (event.key === "Enter") {
+        setBudget();
+      }
     }
 
     function addExpense() {
