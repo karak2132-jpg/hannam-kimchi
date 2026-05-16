@@ -56,6 +56,8 @@
 
     .history-item.undone {
       opacity: 0.45;
+
+      cursor: pointer;
     }
 
   .undo-text {
@@ -895,6 +897,21 @@ document.addEventListener(
 );
 
 function restoreExpense(item) {
+
+   const currencyText =
+    showKRW
+
+      ? `₩${Math.round(
+          item.amount * yenToKrwRate
+        ).toLocaleString()}`
+
+      : `¥${item.amount.toLocaleString()}`;
+
+  const ok = confirm(
+    `${item.time}\n${currencyText}\n\n이 내역을 복구할까요?`
+  );
+
+  if (!ok) return;
 
   item.undone = false;
 
