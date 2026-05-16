@@ -51,6 +51,7 @@
     .budget-box {
       width: 100%;
       display: flex;
+      gap: 10px;
     }
 
     .history-item.undone {
@@ -731,6 +732,12 @@
         placeholder="오늘 예산 입력"
         onkeydown="handleBudgetEnter(event)"
       />
+
+      <button
+        class="set-btn"
+        onclick="setBudget()">
+        입력
+      </button>
 
     </div>
 
