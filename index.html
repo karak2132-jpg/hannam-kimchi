@@ -686,14 +686,14 @@
       <textarea
         class="memo-input"
         id="memoInput"
-        maxlength="40"
+        maxlength="20"
         placeholder="예: 점심, 굿즈, 카페...">
       </textarea>
 
       <div
         class="memo-counter"
         id="memoCounter">
-        0 / 40
+        0 / 20
       </div>
 
       <div class="memo-actions">
@@ -1250,7 +1250,7 @@ function updateMemoCounter() {
   document.getElementById(
     "memoCounter"
   ).innerText =
-    `${input.value.length} / 40`;
+    `${input.value.length} / 20`;
 }
 
 document.getElementById(
