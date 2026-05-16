@@ -293,7 +293,10 @@
 
       max-height: 75vh;
 
-      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+
+      overflow-y: hidden;
     }
 
     .modal-top {
@@ -325,10 +328,16 @@
     }
 
     .history-list {
+      flex: 1;
+
+      overflow-y: auto;
+
       display: flex;
       flex-direction: column;
 
       gap: 12px;
+
+      padding-bottom: 20px;
     }
 
     .history-item {
@@ -343,6 +352,14 @@
       align-items: center;
 
       line-height: 1;
+    }
+
+    .history-bottom {
+      background: white;
+
+      padding-top: 18px;
+
+      border-top: 1px solid #f0f0f0;
     }
 
     .history-time {
@@ -549,6 +566,8 @@
         class="history-list"
         id="historyList">
       </div>
+      
+      <div class="history-bottom">
 
   <div class="history-total-wrap">
 
