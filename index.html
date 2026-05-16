@@ -451,6 +451,13 @@
   body {
     touch-action: manipulation;
 }
+
+  .history-item.undone {
+    opacity: 0.45;
+
+    cursor: pointer;
+}
+
   </style>
 
 </head>
@@ -735,6 +742,14 @@
             ? "history-item undone"
             : "history-item";
 
+        if (item.undone) {
+
+          div.onclick = () => {
+            restoreExpense(item);
+          };
+
+        }
+
         div.innerHTML = `
           <div class="history-left">
             ${item.time}
@@ -878,6 +893,15 @@ document.addEventListener(
   },
   { passive: false }
 );
+
+function restoreExpense(item) {
+
+  item.undone = false;
+
+  spent += item.amount;
+
+  updateUI();
+}
 
   </script>
 
