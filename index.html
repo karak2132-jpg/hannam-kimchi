@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+  />
+
+  <title>Travel Battery</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        sans-serif;
+
+      background: #ffffff;
+      color: #111111;
+
+      min-height: 100vh;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 430px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      gap: 26px;
+    }
+
+    .budget-box {
+      width: 100%;
+      display: flex;
+      gap: 10px;
+    }
+
+    .history-item.undone {
+      opacity: 0.45;
+    }
+
+  .undo-text {
+  margin-left: 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  color: #999999;
+}
+
+    input {
+      flex: 1;
+
+      height: 56px;
+
+      border: none;
+      outline: none;
+
+      border-radius: 20px;
+
+      background: #f4f4f4;
+
+      padding: 0 20px;
+
+      font-size: 17px;
+      font-weight: 500;
+
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: textfield;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .set-btn {
+      border: none;
+
+      border-radius: 20px;
+
+      padding: 0 20px;
+
+      background: #111111;
+      color: white;
+
+      font-size: 15px;
+      font-weight: 600;
+
+      cursor: pointer;
+    }
+
+    .battery-wrap {
+      width: 100%;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      gap: 18px;
+
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .battery {
+      width: 260px;
+      height: 130px;
+
+      border: 8px solid #111111;
+      border-radius: 32px;
+
+      position: relative;
+
+      overflow: hidden;
+
+      background: #f2f2f2;
+    }
+
+    .battery::after {
+      content: "";
+
+      position: absolute;
+
+      right: -18px;
+      top: 40px;
+
+      width: 12px;
+      height: 42px;
+
+      border-radius: 4px;
+
+      background: #111111;
+    }
+
+    .battery-fill {
+      width: 100%;
+      height: 100%;
+
+      border-radius: 22px;
+
+      transition:
+        width 0.5s ease,
+        background 0.5s ease;
+    }
+
+    .percent {
+      font-size: 54px;
+      font-weight: 700;
+
+      letter-spacing: -3px;
+    }
+
+    .money {
+      font-size: 17px;
+      color: #777777;
+    }
+
+    .expense-input {
+      width: 100%;
+    }
+    .expense-input input {
+      width: 100%;
+      height: 68px;
+      font-size: 20px;
+      border-radius: 24px;
+    }
+
+    .main-add-btn {
+      width: 68%;
+      height: 92px;
+
+      border: none;
+      border-radius: 32px;
+
+      background: #111111;
+      color: white;
+
+      font-size: 22px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: 0.15s;
+    }
+
+    .main-add-btn:active {
+      transform: scale(0.97);
+    }
+
+    .bottom-actions {
+      width: 100%;
+
+      display: flex;
+      gap: 10px;
+    }
+
+    .sub-btn {
+      flex: 1;
+
+      height: 52px;
+
+      border: none;
+      border-radius: 18px;
+
+      background: #f3f3f3;
+
+      font-size: 15px;
+      font-weight: 600;
+
+      cursor: pointer;
+    }
+
+    .action-row {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.undo-btn {
+  width: 30%;
+  height: 92px;
+
+  border: none;
+  border-radius: 32px;
+
+  background: #f3f3f3;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.main-add-btn {
+  width: 68%;
+}
+
+    .bottom-actions .sub-btn:last-child {
+      background: #ff3b30;
+      color: white; 
+    }
+
+    .modal {
+      position: fixed;
+
+      inset: 0;
+
+      background: rgba(0, 0, 0, 0.4);
+
+      display: none;
+
+      justify-content: center;
+      align-items: flex-end;
+
+      z-index: 1000;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 500px;
+
+      background: white;
+
+      border-radius: 30px 30px 0 0;
+
+      padding: 24px;
+
+      max-height: 75vh;
+
+      overflow-y: auto;
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      border: none;
+
+      background: #f3f3f3;
+
+      width: 40px;
+      height: 40px;
+
+      border-radius: 50%;
+
+      font-size: 18px;
+
+      cursor: pointer;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+
+      gap: 12px;
+    }
+
+    .history-item {
+      background: #f7f7f7;
+
+      border-radius: 20px;
+
+      padding: 16px 18px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      line-height: 1;
+    }
+
+    .history-time {
+      font-size: 14px;
+      color: #888888;
+
+      flex: 1;
+
+      line-height: 1;
+    }
+
+    .history-amount {
+      font-size: 18px;
+      font-weight: 700;
+
+      text-align: right;
+
+      min-width: 90px;
+
+      font-variant-numeric: tabular-nums;
+
+      line-height: 1;
+    }
+
+    .history-total-wrap {
+      margin-top: 24px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      gap: 10px;
+    }
+
+    .total-currency-area {
+    border: none;
+
+    background: transparent;
+
+    display: flex;
+    align-items: baseline;
+
+    gap: 6px;
+
+    cursor: pointer;
+
+    padding: 0;
+  }
+
+  #currencyToggle {
+    font-size: 36px;
+    font-weight: 800;
+
+    line-height: 1;
+
+    letter-spacing: -1px;
+  }
+
+  #historyTotal {
+    font-size: 36px;
+    font-weight: 800;
+
+    line-height: 1;
+
+    letter-spacing: -1px;
+
+    font-variant-numeric: tabular-nums;
+  }
+
+    .rate-btn {
+      width: 100%;
+
+      height: 46px;
+
+      margin-top: 14px;
+
+      border: none;
+      border-radius: 16px;
+
+      background: #f4f4f4;
+
+      font-size: 15px;
+      font-weight: 600;
+
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <div class="budget-box">
+
+      <input
+        type="number"
+        id="budgetInput"
+        placeholder="오늘 예산 입력"
+      />
+
+      <button
+        class="set-btn"
+        onclick="setBudget()">
+        설정
+      </button>
+
+    </div>
+
+    <div class="battery-wrap">
+
+      <div class="battery">
+        <div
+          class="battery-fill"
+          id="batteryFill">
+        </div>
+      </div>
+
+      <div
+        class="percent"
+        id="percentText">
+        100%
+      </div>
+
+      <div
+        class="money"
+        id="moneyText">
+        ¥0 / ¥0
+      </div>
+
+    </div>
+
+    <div class="expense-input">
+
+      <input
+        type="number"
+        id="expenseInput"
+        placeholder="사용 금액 입력"
+      />
+
+    </div>
+
+    <div class="action-row">
+
+      <button
+        class="undo-btn"
+        onclick="undoExpense()">
+        되돌리기
+      </button>
+
+      <button
+        class="main-add-btn"
+        onclick="addExpense()">
+        추가
+      </button>
+
+    </div>
+
+    <div class="bottom-actions">
+
+      <button
+        class="sub-btn"
+        onclick="openModal()">
+        로그 보기
+      </button>
+
+      <button
+        class="sub-btn"
+        onclick="resetAll()">
+        초기화
+      </button>
+
+    </div>
+
+  </div>
+
+  <div
+    class="modal"
+    id="modal">
+
+    <div class="modal-content">
+
+      <div class="modal-top">
+
+        <div class="modal-title">
+          사용 로그
+        </div>
+
+        <button
+          class="close-btn"
+          onclick="closeModal()">
+          ✕
+        </button>
+
+      </div>
+
+      <div
+        class="history-list"
+        id="historyList">
+      </div>
+
+  <div class="history-total-wrap">
+
+    <div class="history-total-label">
+      총 사용금액
+    </div>
+
+    <button
+      class="total-currency-area"
+      onclick="toggleCurrency()">
+
+      <span id="currencyToggle">
+        ¥
+      </span>
+
+      <span id="historyTotal">
+      </span>
+
+    </button>
+
+    <div
+    class="history-total"
+    id="historyTotal">
+    </div>
+
+  </div>
+
+  <button
+    class="rate-btn"
+    onclick="setExchangeRate()">
+    환율 설정
+  </button>
+
+    </div>
+
+  </div>
+
+  <script>
+    let budget =
+      Number(localStorage.getItem("budget")) || 0;
+
+    let spent =
+      Number(localStorage.getItem("spent")) || 0;
+
+    let history =
+      JSON.parse(localStorage.getItem("history")) || [];
+
+    let showKRW = false;
+
+    let yenToKrwRate =
+      Number(localStorage.getItem("yenRate")) || 9.7;
+      
+    function getBatteryColor(percent) {
+      const hue = percent * 1.2;
+      return `hsl(${hue}, 85%, 50%)`;
+    }
+
+    function updateUI() {
+      const remain =
+        Math.max(budget - spent, 0);
+
+      const percent =
+        budget > 0
+          ? Math.max((remain / budget) * 100, 0)
+          : 0;
+
+      const fill =
+        document.getElementById("batteryFill");
+
+      fill.style.width = `${percent}%`;
+
+      fill.style.background =
+        getBatteryColor(percent);
+
+      document.getElementById(
+        "percentText"
+      ).innerText =
+        `${Math.round(percent)}%`;
+
+      document.getElementById(
+        "moneyText"
+      ).innerText =
+        `¥${spent.toLocaleString()} / ¥${budget.toLocaleString()}`;
+
+      renderHistory();
+
+      localStorage.setItem(
+        "budget",
+        budget
+      );
+
+      localStorage.setItem(
+        "spent",
+        spent
+      );
+
+      localStorage.setItem(
+        "history",
+        JSON.stringify(history)
+      );
+    }
+
+    function setBudget() {
+      const input =
+        document.getElementById("budgetInput");
+
+      const value =
+        Number(input.value);
+
+      if (!value) return;
+
+      budget = value;
+      spent = 0;
+      history = [];
+
+      input.value = "";
+
+      updateUI();
+    }
+
+    function addExpense() {
+      const input =
+        document.getElementById("expenseInput");
+
+      const value =
+        Number(input.value);
+
+      if (!value) return;
+
+      spent += value;
+
+      history.unshift({
+        amount: value,
+
+        time: new Date().toLocaleString(
+          "ko-KR",
+          {
+            month: "numeric",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }
+        ),
+
+        undone: false, 
+      });
+
+      input.value = "";
+
+      updateUI();
+    }
+
+    function renderHistory() {
+      const list =
+        document.getElementById("historyList");
+
+      list.innerHTML = "";
+
+      history.forEach((item) => {
+        const div =
+          document.createElement("div");
+
+        div.className = 
+          item.undone
+            ? "history-item undone"
+            : "history-item";
+
+        div.innerHTML = `
+          <div class="history-left">
+            ${item.time}
+
+            ${
+            item.undone
+            ? `<span class="undo-text">취소됨</span>`
+            : ""
+            }
+          </div>
+
+          <div class="history-right">
+            - ¥${item.amount.toLocaleString()}
+          </div>
+        `;
+
+        list.appendChild(div);
+      });
+
+    const currencyBtn =
+      document.getElementById("currencyToggle");
+
+    if (showKRW) {
+
+      const krw =
+        Math.round(spent * yenToKrwRate);
+      currencyBtn.innerText = "₩";
+
+      document.getElementById(
+        "historyTotal"
+      ).innerText =
+        `${krw.toLocaleString()}`;
+
+    } else {
+
+      currencyBtn.innerText = "¥";
+
+      document.getElementById(
+        "historyTotal"
+      ).innerText =
+        `${spent.toLocaleString()}`;
+    }
+
+    }
+
+    function openModal() {
+      document.getElementById(
+        "modal"
+      ).style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById(
+        "modal"
+      ).style.display = "none";
+    }
+
+    function resetAll() {
+      const ok = confirm(
+        "모든 데이터를 초기화할까요?"
+      );
+
+      if (!ok) return;
+
+      budget = 0;
+      spent = 0;
+      history = [];
+
+      localStorage.clear();
+
+      updateUI();
+    }
+
+    updateUI();
+
+    function toggleCurrency() {
+    showKRW = !showKRW;
+    renderHistory();
+  }
+
+  function setExchangeRate() {
+
+    const input = prompt(
+      "100엔당 원화 환율 입력\n예: 9.7"
+    );
+
+    if (!input) return;
+
+    yenToKrwRate = Number(input);
+
+    localStorage.setItem(
+      "yenRate",
+      yenToKrwRate
+    );
+
+  renderHistory();
+}
+
+function undoExpense() {
+
+  const target =
+    history.find(item => !item.undone);
+
+  if (!target) return;
+
+  target.undone = true;
+
+  spent -= target.amount;
+
+  if (spent < 0) {
+    spent = 0;
+  }
+
+  updateUI();
+}
+
+  </script>
+
+</body>
+</html>
