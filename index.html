@@ -1194,7 +1194,7 @@ function restoreExpense(item) {
       : "";
 
   const ok = confirm(
-    `${item.time}\n${currencyText}${memoText}\n이 내역을 복구할까요?`
+    `${item.time}\n\n${currencyText}${memoText}\n\n이 내역을 복구할까요?`
   );
 
   if (!ok) return;
